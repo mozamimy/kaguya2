@@ -1,5 +1,5 @@
 #[derive(Debug)]
-pub enum OperationType {
+pub enum InstructionType {
     Forward,
     Backward,
     Increment,
@@ -12,7 +12,21 @@ pub enum OperationType {
 }
 
 #[derive(Debug)]
-pub struct Operation {
-    pub operation_type: OperationType,
+pub struct Instruction {
+    pub operation_type: InstructionType,
     pub operand: Option<i32>,
 }
+
+#[derive(Debug)]
+pub struct VirtualMachine {
+    iseq: Vec<Instruction>,
+    pc: u32,
+    left_stack: Vec<u8>,
+    right_stack: Vec<u8>,
+}
+
+// impl VirtualMachine {
+//     pub fn run() {
+//         let 
+//     }
+// }

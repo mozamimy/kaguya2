@@ -50,7 +50,7 @@ impl NodeArena {
 }
 
 impl Node {
-    pub fn accept(&self, compiler: &compiler::Compiler) -> Vec<virtual_machine::Operation> {
+    pub fn accept(&self, compiler: &compiler::Compiler) -> Vec<virtual_machine::Instruction> {
         compiler.visit(self.node_id)
     }
 }
