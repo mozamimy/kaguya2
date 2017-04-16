@@ -6,6 +6,7 @@ use std::io::Read;
 
 use kaguya2::parser;
 use kaguya2::ast;
+use kaguya2::compiler;
 
 fn main() {
     let filepath = env::args().nth(1).unwrap();
@@ -23,6 +24,11 @@ fn main() {
     let root_id = arena.alloc(ast::NodeType::Root, None);
 
     parser.parse(root_id, arena);
-    println!("{:?}", arena.get(root_id));
-    println!("{:?}", arena);
+    // println!("{:?}", arena.get(root_id));
+    // println!("{:?}", arena);
+
+    let compiler = compiler::Compiler::new(root_id, arena);
+    let iseq = compiler.compile();
+    println!("{:?}", iseq);
+    // println!("{:?}", compiler);
 }

@@ -1,3 +1,6 @@
+use compiler;
+use virtual_machine;
+
 #[derive(Debug)]
 pub enum NodeType {
     Root,
@@ -17,6 +20,7 @@ pub struct Node {
     pub node_id: NodeId,
     pub parent: Option<NodeId>,
     pub children: Vec<NodeId>,
+    pub ntype: NodeType,
 }
 
 #[derive(Debug)]
@@ -27,7 +31,7 @@ pub struct NodeArena {
 impl NodeArena {
     pub fn alloc(&mut self, ntype: NodeType, parent: Option<NodeId>) -> NodeId {
         let id = self.arena.len();
-        let node = Node { node_id: id, parent: parent, children: Vec::new() };
+        let node = Node { node_id: id, parent: parent, children: Vec::new(), ntype: ntype };
         self.arena.push(node);
         id
     }
@@ -42,5 +46,11 @@ impl NodeArena {
 
     pub fn append_child(&mut self, parent_id: NodeId, child_id: NodeId) {
         &self.get_mut(parent_id).children.push(child_id);
+    }
+}
+
+impl Node {
+    pub fn accept(&self, compiler: &compiler::Compiler) -> Vec<virtual_machine::Operation> {
+        compiler.visit(self.node_id)
     }
 }
