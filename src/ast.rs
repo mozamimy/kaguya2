@@ -13,8 +13,6 @@ pub enum NodeType {
     While,
 }
 
-pub type NodeId = usize;
-
 #[derive(Debug)]
 pub struct Node {
     pub node_id: NodeId,
@@ -27,6 +25,8 @@ pub struct Node {
 pub struct NodeArena {
     pub arena: Vec<Node>,
 }
+
+pub type NodeId = usize;
 
 impl NodeArena {
     pub fn alloc(&mut self, ntype: NodeType, parent: Option<NodeId>) -> NodeId {

@@ -1,3 +1,5 @@
+extern crate libc;
+
 pub mod parser;
 pub mod ast;
 pub mod compiler;

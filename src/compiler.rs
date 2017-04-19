@@ -16,7 +16,7 @@ impl<'a> Compiler<'a> {
         let root = self.ast_arena.get(self.ast_root_id);
         let mut iseq = root.accept(self);
         iseq.push(virtual_machine::Instruction {
-            operation_type: virtual_machine::InstructionType::Leave,
+            instruction_type: virtual_machine::InstructionType::Leave,
             operand: None,
         });
         iseq
@@ -29,31 +29,37 @@ impl<'a> Compiler<'a> {
         match node.ntype {
             ast::NodeType::Forward => {
                 iseq.push(virtual_machine::Instruction {
-                    operation_type: virtual_machine::InstructionType::Forward,
+                    instruction_type: virtual_machine::InstructionType::Forward,
                     operand: None,
                 })
             },
             ast::NodeType::Backward => {
                 iseq.push(virtual_machine::Instruction {
-                    operation_type: virtual_machine::InstructionType::Backward,
+                    instruction_type: virtual_machine::InstructionType::Backward,
                     operand: None,
                 })
             },
             ast::NodeType::Increment => {
                 iseq.push(virtual_machine::Instruction {
-                    operation_type: virtual_machine::InstructionType::Increment,
+                    instruction_type: virtual_machine::InstructionType::Increment,
                     operand: None,
                 })
             },
             ast::NodeType::Decrement => {
                 iseq.push(virtual_machine::Instruction {
-                    operation_type: virtual_machine::InstructionType::Decrement,
+                    instruction_type: virtual_machine::InstructionType::Decrement,
                     operand: None,
                 })
             },
             ast::NodeType::Output => {
                 iseq.push(virtual_machine::Instruction {
-                    operation_type: virtual_machine::InstructionType::Output,
+                    instruction_type: virtual_machine::InstructionType::Output,
+                    operand: None,
+                })
+            },
+            ast::NodeType::Input => {
+                iseq.push(virtual_machine::Instruction {
+                    instruction_type: virtual_machine::InstructionType::Input,
                     operand: None,
                 })
             },
@@ -69,12 +75,12 @@ impl<'a> Compiler<'a> {
                 let sub_iseq_length = sub_iseq.len() as i32;
 
                 iseq.push(virtual_machine::Instruction {
-                    operation_type: virtual_machine::InstructionType::BranchIfZero,
+                    instruction_type: virtual_machine::InstructionType::BranchIfZero,
                     operand: Some(sub_iseq_length + 2),
                 });
                 iseq.append(&mut sub_iseq);
                 iseq.push(virtual_machine::Instruction {
-                    operation_type: virtual_machine::InstructionType::BranchUnlessZero,
+                    instruction_type: virtual_machine::InstructionType::BranchUnlessZero,
                     operand: Some(-sub_iseq_length),
                 });
             },
@@ -86,7 +92,6 @@ impl<'a> Compiler<'a> {
                     iseq.append(&mut child.accept(self));
                 }
             },
-            _ => panic!("Invalid node!")
         }
 
         iseq
