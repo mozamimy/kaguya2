@@ -1,5 +1,5 @@
+use std::io::*;
 use std::process;
-use libc::getchar;
 
 #[derive(Debug, Clone)]
 pub enum InstructionType {
@@ -58,36 +58,34 @@ impl VirtualMachine {
                     self.left_stack.push(self.right_stack.pop().unwrap());
                 }
                 self.pc += 1;
-            },
+            }
             InstructionType::Backward => {
                 self.right_stack.push(self.left_stack.pop().unwrap());
                 self.pc += 1;
-            },
+            }
             InstructionType::Increment => {
                 let new_value = self.left_stack.pop().unwrap() + 1;
                 self.left_stack.push(new_value);
                 self.pc += 1;
-            },
+            }
             InstructionType::Decrement => {
                 let new_value = self.left_stack.pop().unwrap() - 1;
                 self.left_stack.push(new_value);
                 self.pc += 1;
-            },
+            }
             InstructionType::Output => {
                 let value = self.left_stack.pop();
                 print!("{}", value.unwrap() as char);
                 self.left_stack.push(value.unwrap());
                 self.pc += 1;
-            },
+            }
             InstructionType::Input => {
                 self.left_stack.pop();
-                let value: u8;
-                unsafe {
-                    value = getchar() as u8;
-                }
-                self.left_stack.push(value);
+                let mut buf = [0u8; 1];
+                ::std::io::stdin().read_exact(&mut buf).unwrap();
+                self.left_stack.push(buf[0]);
                 self.pc += 1;
-            },
+            }
             InstructionType::BranchIfZero => {
                 let value = self.left_stack.pop().unwrap();
                 self.left_stack.push(value);
@@ -97,7 +95,7 @@ impl VirtualMachine {
                 } else {
                     self.pc += 1;
                 }
-            },
+            }
             InstructionType::BranchUnlessZero => {
                 let value = self.left_stack.pop().unwrap();
                 self.left_stack.push(value);
@@ -107,10 +105,10 @@ impl VirtualMachine {
                 } else {
                     self.pc += 1;
                 }
-            },
+            }
             InstructionType::Leave => {
                 process::exit(0);
-            },
+            }
         }
     }
 }

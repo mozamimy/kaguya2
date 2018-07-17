@@ -31,7 +31,12 @@ pub type NodeId = usize;
 impl NodeArena {
     pub fn alloc(&mut self, ntype: NodeType, parent: Option<NodeId>) -> NodeId {
         let id = self.arena.len();
-        let node = Node { node_id: id, parent: parent, children: Vec::new(), ntype: ntype };
+        let node = Node {
+            node_id: id,
+            parent: parent,
+            children: Vec::new(),
+            ntype: ntype,
+        };
         self.arena.push(node);
         id
     }
